@@ -5,6 +5,8 @@ use {Builder, Type, Vector, Float};
 use num_traits::NumCast;
 
 use rand::Rng;
+use rand::prelude::*;
+use rand::FromEntropy;
 
 use modulo::Mod;
 
@@ -157,7 +159,7 @@ fn random_point_is_between_right_values_top_lvl() {
     extern crate nalgebra;
     use num_traits::Zero;
     use rand::{SeedableRng, XorShiftRng};
-    let mut rand = XorShiftRng::from_seed([1, 2, 3, 4]);
+    let mut rand = SmallRng::from_entropy();
     let radius = 0.2;
     let grid = Grid::<f64, nalgebra::Vector2<_>>::new(radius, Type::Normal);
     for _ in 0..1000 {

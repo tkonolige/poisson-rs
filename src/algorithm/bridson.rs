@@ -155,7 +155,7 @@ fn random_point_annulus<F, V, R>(rand: &mut R, min: F, max: F) -> V
     loop {
         let mut result = V::zero();
         for n in 0..V::dimension() {
-            result[n] = NumCast::from(StandardNormal::rand(rand).0)
+            result[n] = NumCast::from(rand.sample(StandardNormal))
                      .expect("The f64 produced by StandardNormal should be always castable to \
                               float.");
         }

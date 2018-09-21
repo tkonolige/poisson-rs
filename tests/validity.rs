@@ -2,7 +2,8 @@ extern crate poisson;
 use poisson::Type;
 
 extern crate rand;
-use rand::{Rand, Rng, SeedableRng, XorShiftRng};
+use rand::{Rng, FromEntropy};
+use rand::rngs::SmallRng;
 use rand::distributions::normal::StandardNormal;
 
 extern crate sphere;
@@ -26,7 +27,7 @@ fn multiple_too_close_invalid() {
     let relative_radius = 0.8;
     let prefiller = |radius| {
         let mut last = None::<Vect>;
-        let mut rand = XorShiftRng::from_seed([9, 8, 7, 6]);
+        let mut rand = SmallRng::from_entropy();
         move |v| {
             if let Some(_) = v {
                 if last == v {
@@ -47,7 +48,7 @@ fn multiple_too_close_invalid() {
 pub fn sphere_uniform_point<R: Rng>(rng: &mut R) -> Vect {
     let mut result = Vect::zero();
     for c in 0..Vect::dimension() {
-        result[c] = StandardNormal::rand(rng).0;
+        result[c] = rng.sample(StandardNormal);
     }
     result.normalize()
 }

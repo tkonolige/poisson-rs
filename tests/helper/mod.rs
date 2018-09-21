@@ -1,7 +1,9 @@
 #![allow(unused)]
 use poisson::{Type, Builder, Vector, Float, algorithm};
 
-use rand::{SeedableRng, XorShiftRng};
+use rand::SeedableRng;
+use rand::rngs::SmallRng;
+use rand::FromEntropy;
 
 extern crate num_traits;
 use self::num_traits::NumCast;
@@ -50,7 +52,7 @@ fn test_algo<'r, T, F, I, A>(samples: usize, relative_radius: f64, seeds: u32, p
     use self::When::*;
     for i in 0..seeds {
         let mut prefilled = vec![];
-        let rand = XorShiftRng::from_seed([i + 1, seeds - i + 1, (i + 1) * (i + 1), 1]);
+        let rand = SmallRng::from_entropy();
         let mut poisson_iter = Builder::with_samples(samples, relative_radius, ptype).build(rand, algo).into_iter();
         let mut poisson = vec![];
         let mut prefill = (prefiller)(poisson_iter.radius());
