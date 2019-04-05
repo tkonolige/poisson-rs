@@ -4,10 +4,9 @@ use utils::*;
 
 use num_traits::NumCast;
 
-use rand::{Rand, Rng};
-use rand::distributions::range::Range;
-use rand::distributions::IndependentSample;
-use rand::distributions::normal::StandardNormal;
+use rand::Rng;
+use rand::distributions::Uniform;
+use rand::distributions::StandardNormal;
 
 use sphere::sphere_volume;
 
@@ -54,7 +53,7 @@ impl<F, V> Algorithm<F, V> for Algo<F, V>
         where R: Rng
     {
         while !self.active_samples.is_empty() {
-            let index = Range::new(0, self.active_samples.len()).ind_sample(rng);
+            let index = Uniform::new(0, self.active_samples.len()).ind_sample(rng);
             let cur = self.active_samples[index].clone();
             for _ in 0..30 {
                 let min = F::cast(2) * poisson.radius;
@@ -70,7 +69,7 @@ impl<F, V> Algorithm<F, V> for Algo<F, V>
             self.active_samples.swap_remove(index);
         }
         while self.success == 0 {
-            let cell = Range::new(0, self.grid.cells()).ind_sample(rng);
+            let cell = Uniform::new(0, self.grid.cells()).ind_sample(rng);
             let index: V = decode(cell, self.grid.side())
                                .expect("Because we are decoding random index within grid \
                                         this should work.");

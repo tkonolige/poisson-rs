@@ -55,7 +55,7 @@ extern crate modulo;
 extern crate sphere;
 
 extern crate rand;
-use rand::{Rand, Rng};
+use rand::Rng;
 
 extern crate num_traits;
 use num_traits::{NumCast, Zero};
@@ -63,7 +63,7 @@ use num_traits::Float as NumFloat;
 
 extern crate alga;
 use alga::general::AbstractField;
-use alga::linear::{NormedSpace, FiniteDimVectorSpace};
+use alga::linear::{NormedSpace, FiniteDimVectorSpace, VectorSpace};
 
 #[macro_use]
 extern crate lazy_static;
@@ -84,21 +84,19 @@ pub trait Float:
     AddAssign +
     SubAssign +
     MulAssign +
-    DivAssign +
-    Rand
+    DivAssign
 {
     /// Casts usize to float.
     fn cast(n: usize) -> Self {
         NumCast::from(n).expect("Casting usize to float should always succeed.")
     }
 }
-impl<T> Float for T where T: NumFloat + AbstractField + AddAssign + SubAssign + MulAssign + DivAssign + Rand
+impl<T> Float for T where T: NumFloat + AbstractField + AddAssign + SubAssign + MulAssign + DivAssign
 {}
 
 /// Describes what vectors are.
 pub trait Vector<F>:
     Zero +
-    Rand +
     FiniteDimVectorSpace<Field=F> +
     NormedSpace<Field=F> +
     Index<usize> +
@@ -108,7 +106,7 @@ pub trait Vector<F>:
 {}
 impl<T, F> Vector<F> for T
     where F: Float,
-          T: Zero + Rand + FiniteDimVectorSpace<Field=F> + NormedSpace<Field=F> + Index<usize> + IndexMut<usize> + Clone,
+          T: Zero + VectorSpace<Field=F> + FiniteDimVectorSpace<Field=F> + NormedSpace<Field=F> + Index<usize> + IndexMut<usize> + Clone,
 {}
 
 /// Enum for determining the type of poisson-disk distribution.

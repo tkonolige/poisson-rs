@@ -3,8 +3,7 @@ use algorithm::{Creator, Algorithm};
 use utils::*;
 
 use rand::Rng;
-use rand::distributions::range::Range;
-use rand::distributions::IndependentSample;
+use rand::distributions::Uniform;
 
 use sphere::sphere_volume;
 
@@ -39,7 +38,7 @@ impl<F, V> Creator<F, V> for Ebeida
             a: a,
             grid: grid,
             throws: (a * indices.len() as f64).ceil() as usize,
-            range: Range::new(0, indices.len()),
+            range: Uniform::new(0, indices.len()),
             indices: indices,
             level: 0,
             success: 0,
@@ -61,7 +60,7 @@ pub struct Algo<F, V>
     grid: Grid<F, V>,
     indices: Vec<V>,
     level: usize,
-    range: Range<usize>,
+    range: Uniform<usize>,
     throws: usize,
     success: usize,
     outside: Vec<V>,
@@ -94,7 +93,7 @@ impl<F, V> Algorithm<F, V> for Algo<F, V>
                     if self.indices.is_empty() {
                         return None;
                     }
-                    self.range = Range::new(0, self.indices.len());
+                    self.range = Uniform::new(0, self.indices.len());
                 } else {
                     let sample = choose_random_sample(rng, &self.grid, cur.clone(), self.level);
                     if is_disk_free(&self.grid,
@@ -109,7 +108,7 @@ impl<F, V> Algorithm<F, V> for Algo<F, V>
                             .push(sample.clone());
                         self.indices.swap_remove(index);
                         if !self.indices.is_empty() {
-                            self.range = Range::new(0, self.indices.len());
+                            self.range = Uniform::new(0, self.indices.len());
                         }
                         self.success += 1;
                         return Some(sample);
@@ -120,7 +119,7 @@ impl<F, V> Algorithm<F, V> for Algo<F, V>
             if self.indices.is_empty() {
                 return None;
             }
-            self.range = Range::new(0, self.indices.len());
+            self.range = Uniform::new(0, self.indices.len());
             self.throws = (self.a * self.indices.len() as f64).ceil() as usize;
             self.level += 1;
         }
